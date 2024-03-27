@@ -66,16 +66,13 @@ if __name__ == '__main__':
     mb = MatbenchBenchmark(
         autoload=False,
         subset=[
-            # "matbench_mp_e_form",  # 回归 13w
-            "matbench_perovskites"  # 1w8
-            # "matbench_jdft2d"
+            # "matbench_mp_e_form",  # 回归
+            "matbench_perovskites"
         ]
     )
 
     if torch.cuda.is_available():
         torch.cuda.set_device(0)
-        # torch.set_default_device("cuda:1")
-
     for task in mb.tasks:
         task.load()
         for fold in task.folds:
@@ -83,12 +80,12 @@ if __name__ == '__main__':
 
             structures, eform_per_atom = get_data(train_inputs, train_outputs)
 
-            # eform_per_atom = torch.tensor(eform_per_atom)
             # 数据集中所有的元素类型
             elem_list = get_element_list(structures)
+            # [30, 30, 61, 61,  4,  4, 62, 62, 62, 47, 48, 48, 48, 48, 48, 48, 48, 62, 62, 47, 47, 47, 47, 47, 47, 47, 47, 66, 66, 10, 10, 10, 10, 10, 10,  0, 0]
+            # 里面的数字是根据原子序数大小
             # 结构转化为图
             converter = Structure2Graph(element_types=elem_list, cutoff=5.0)
-
             # 把原数据集转化为megnet数据集
             mp_dataset = MEGNetDataset(
                 structures=structures,  # 结构
@@ -138,10 +135,9 @@ if __name__ == '__main__':
                 bond_expansion=bond_expansion,
                 cutoff=4.0,
                 gauss_width=0.5,
+
             )
 
-            # optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
-            # scheduler = LinearLearningRateScheduler(learning_rate_start=0.0005, learning_rate_stop=0.5e-05, epo_min=100, epo=1000)
             # setup the MEGNetTrainer
             lit_module = ModelLightningModule(model=model, loss="mae_loss",
                                               # optimizer=optimizer,
