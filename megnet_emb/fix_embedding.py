@@ -22,7 +22,7 @@ from tqdm import tqdm
 from matgl.ext.pymatgen import Structure2Graph, get_element_list
 from matgl.graph.data import MEGNetDataset, MGLDataLoader, collate_fn
 from matgl.layers import BondExpansion
-from matgl.models._megnet import MEGNet
+from megnet_model import MEGNet
 from matgl.utils.io import RemoteFile
 from matgl.utils.training import ModelLightningModule
 from pymatgen.core import Element
@@ -30,7 +30,7 @@ import argparse
 from torch.optim.lr_scheduler import LambdaLR
 from matbench.bench import MatbenchBenchmark
 from dgl.dataloading import GraphDataLoader
-# from kgcnn.training.scheduler import LinearLearningRateScheduler
+import csv
 
 # To suppress warnings for clearer output
 warnings.simplefilter("ignore")
@@ -40,6 +40,19 @@ parser = argparse.ArgumentParser(description='MEGNet')
 parser.add_argument('--dim_node_embed', type=int, default=64, help='number of node embedding dim')
 args = parser.parse_args()
 
+# 103元素
+element_103 = (
+    'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc',
+    'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr', 'Rb', 'Sr', 'Y', 'Zr',
+    'Nb',
+    'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd', 'In', 'Sn', 'Sb', 'Te', 'I', 'Xe', 'Cs', 'Ba', 'La', 'Ce', 'Pr', 'Nd',
+    'Pm',
+    'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Er', 'Tm', 'Yb', 'Lu', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg',
+    'Tl',
+    'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm',
+    'Md',
+    'No', 'Lr')
+
 
 # Dataset Preparation
 def get_data(input, output):
@@ -47,6 +60,21 @@ def get_data(input, output):
     for structure_str in input:
         structures.append(structure_str)
     return structures, output.tolist()
+
+
+def load_pretrain_embeddings():
+    # 读取嵌入权重
+    dimension = args.dim_node_embed
+    coordinates = []
+    with open('../MDS/MDS_' + str(dimension) + 'dim.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)
+        for row in reader:
+            # 转换为列表
+            coordinate_str = row[1][1:-1]  # 去除方括号
+            coordinate_list = [float(coord.strip()) for coord in coordinate_str.split(',')]
+            coordinates.append(coordinate_list)
+    return coordinates
 
 
 if __name__ == '__main__':
@@ -131,23 +159,22 @@ if __name__ == '__main__':
                 hidden_layer_sizes_output=(32, 16),
                 is_classification=False,
                 activation_type="softplus2",
-                element_types=DEFAULT_ELEMENTS,  # 更改
+                element_types=element_103,  # 用于计算embedding矩阵维度
                 bond_expansion=bond_expansion,
                 cutoff=4.0,
                 gauss_width=0.5,
+                emb_elem_list=elem_list,  # 用于还原为原子序数
+                pretrain_embeddings=load_pretrain_embeddings()  # pretrain的二维嵌入矩阵
 
             )
 
             # setup the MEGNetTrainer
-            lit_module = ModelLightningModule(model=model, loss="mae_loss",
-                                              # optimizer=optimizer,
-                                              # scheduler=scheduler
-                                              )
+            lit_module = ModelLightningModule(model=model, loss="mae_loss")
 
             # early_stop_callback = EarlyStopping(monitor="val_MAE", min_delta=0.00, patience=500, verbose=True, mode="min")
             checkpoint_callback = ModelCheckpoint(
                 monitor='val_MAE', dirpath='megnet_orig_pre_train_model',  # Directory to save the checkpoints
-                filename=str(args.dim_node_embed) + '_dim__MEGNet_nnEmbed__fold_'+str(fold+1), save_top_k=1,
+                filename=str(args.dim_node_embed) + '_dim__MEGNet_nnEmbed__fold_' + str(fold + 1), save_top_k=1,
                 mode='min')
             # Training
             trainer = pl.Trainer(max_epochs=1000, callbacks=[checkpoint_callback])

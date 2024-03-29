@@ -17,9 +17,10 @@ from torch import nn
 
 from matgl.config import DEFAULT_ELEMENTS
 from matgl.graph.compute import compute_pair_vector_and_distance
-from matgl.layers import MLP, ActivationFunction, BondExpansion, EdgeSet2Set, EmbeddingBlock, MEGNetBlock
+from matgl.layers import MLP, ActivationFunction, BondExpansion, EdgeSet2Set, MEGNetBlock
 from matgl.utils.io import IOMixIn
 from pymatgen.core import Element
+from embedding_block import EmbeddingBlock
 
 if TYPE_CHECKING:
     import dgl
