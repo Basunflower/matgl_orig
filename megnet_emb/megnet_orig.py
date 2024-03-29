@@ -83,9 +83,9 @@ if __name__ == '__main__':
 
             structures, eform_per_atom = get_data(train_inputs, train_outputs)
 
-            # eform_per_atom = torch.tensor(eform_per_atom)
             # 数据集中所有的元素类型
             elem_list = get_element_list(structures)
+
             # 结构转化为图
             converter = Structure2Graph(element_types=elem_list, cutoff=5.0)
 
