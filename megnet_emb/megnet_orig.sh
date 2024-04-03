@@ -1,7 +1,7 @@
 #! /bin/bash
 # bash megnet_orig.sh
-# nohup bash megnet_orig.sh > perovskites_different_dim_2481632.log 2>&1 &
-dim_node_embed_values=(128) #(2 4 8 16 32)  # 1,64)
+# nohup bash megnet_orig.sh > mp_e_form_16_32_64.log 2>&1 &
+dim_node_embed_values=(1 2 4 8 16 32 64 128)
 
 for dim in "${dim_node_embed_values[@]}"
 do

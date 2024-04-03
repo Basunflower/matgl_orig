@@ -30,7 +30,6 @@ import argparse
 from torch.optim.lr_scheduler import LambdaLR
 from matbench.bench import MatbenchBenchmark
 from dgl.dataloading import GraphDataLoader
-# from kgcnn.training.scheduler import LinearLearningRateScheduler
 
 # To suppress warnings for clearer output
 warnings.simplefilter("ignore")
@@ -55,6 +54,8 @@ if __name__ == '__main__':
             os.remove(fn)
         except FileNotFoundError:
             pass
+    torch.cuda.init()
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
     init_seed = 42
     torch.manual_seed(init_seed)
     torch.cuda.manual_seed(init_seed)
@@ -66,15 +67,14 @@ if __name__ == '__main__':
     mb = MatbenchBenchmark(
         autoload=False,
         subset=[
-            # "matbench_mp_e_form",  # 回归 13w
-            "matbench_perovskites"  # 1w8
+            "matbench_mp_e_form_16",  # 回归 13w
+            # "matbench_perovskites"  # 1w8
             # "matbench_jdft2d"
         ]
     )
 
     if torch.cuda.is_available():
-        torch.cuda.set_device(0)
-        # torch.set_default_device("cuda:1")
+        torch.cuda.set_device(1)
 
     for task in mb.tasks:
         task.load()
@@ -113,8 +113,9 @@ if __name__ == '__main__':
                 val_data=val_data,
                 collate_fn=collate_fn,
                 batch_size=32,
-                num_workers=4,
-                pin_memory=torch.cuda.is_available()
+                num_workers=8,
+                pin_memory=torch.cuda.is_available(),
+                generator=torch.Generator().manual_seed(42)
             )
 
             # define the bond expansion
@@ -140,25 +141,20 @@ if __name__ == '__main__':
                 gauss_width=0.5,
             )
 
-            # optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
-            # scheduler = LinearLearningRateScheduler(learning_rate_start=0.0005, learning_rate_stop=0.5e-05, epo_min=100, epo=1000)
             # setup the MEGNetTrainer
-            lit_module = ModelLightningModule(model=model, loss="mae_loss",
-                                              # optimizer=optimizer,
-                                              # scheduler=scheduler
-                                              )
+            lit_module = ModelLightningModule(model=model, loss="mae_loss")
 
             # early_stop_callback = EarlyStopping(monitor="val_MAE", min_delta=0.00, patience=500, verbose=True, mode="min")
-            checkpoint_callback = ModelCheckpoint(
-                monitor='val_MAE', dirpath='megnet_orig_pre_train_model',  # Directory to save the checkpoints
-                filename=str(args.dim_node_embed) + '_dim__MEGNet_nnEmbed__fold_'+str(fold+1), save_top_k=1,
-                mode='min')
+            # checkpoint_callback = ModelCheckpoint(
+            #     monitor='val_MAE', dirpath='matbench_jdft2d_model',  # Directory to save the checkpoints
+            #     filename=str(args.dim_node_embed) + '_dim__MEGNet_nnEmbed__fold_'+str(fold+1), save_top_k=1,
+            #     mode='min')
             # Training
-            trainer = pl.Trainer(max_epochs=1000, callbacks=[checkpoint_callback])
+            trainer = pl.Trainer(max_epochs=1000)# , default_root_dir=task.dataset_name+"_lightning_logs/")  # , callbacks=[checkpoint_callback])
             trainer.fit(model=lit_module, train_dataloaders=train_loader, val_dataloaders=val_loader)
 
             # 测试部分
-            model.eval()
+            lit_module.eval()
             test_inputs, test_outputs = task.get_test_data(fold, include_target=True)
             test_sturcture, test_Eform = get_data(test_inputs, test_outputs)
             # 把原数据集转化为megnet数据集
@@ -174,7 +170,7 @@ if __name__ == '__main__':
 
             kwargs = {
                 "batch_size": 32,
-                "num_workers": 4,
+                "num_workers": 8,
                 "pin_memory": torch.cuda.is_available()
             }
 
@@ -187,6 +183,3 @@ if __name__ == '__main__':
                     os.remove(fn)
                 except FileNotFoundError:
                     pass
-
-    # # Save your results
-    # mb.to_file("my_models_benchmark.json.gz")
