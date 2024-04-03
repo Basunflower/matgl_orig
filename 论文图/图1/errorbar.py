@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_mae_from_vsv(file_path="different_dim_mae.csv"):
+def get_mae_from_vsv(file_path="perovskites_32.csv"):
     data = {}
     with open(file_path, 'r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
@@ -29,20 +29,21 @@ def draw_errorbar(mae_data):
         plt.text(i, means[i]+stds[i], f"{means[i]:.4f}", ha='center', va='bottom', fontweight='bold')  # 输出中心点的值
 
     # 榜一虚线
-    plt.axhline(y=0.0269, color='gray', linestyle='--', label='Leaderboard Model MAE')
+    # plt.axhline(y=0.0269, color='gray', linestyle='--', label='Leaderboard Model MAE')
+    plt.axhline(y=33.1918, color='gray', linestyle='--', label='Leaderboard Model MAE')
 
     plt.xticks(x, mae_data.keys())
-    plt.xlim(-0.45, len(mae_data)-0.6)
+    plt.xlim(-0.5, len(mae_data)-0.5)
     plt.xlabel('Embedding Dimension')
     plt.ylabel('Mean Absolute Error (MAE)')
     plt.title('MAE with Different Embedding Dimensions')
     plt.legend()
-    plt.savefig("Embedding_MAE.pdf", bbox_inches='tight', pad_inches=0)
+    plt.savefig("matbench_jdft2d.pdf", bbox_inches='tight', pad_inches=0)
     plt.show()
 
 
 def main():
-    mae_data = get_mae_from_vsv("different_dim_mae.csv")
+    mae_data = get_mae_from_vsv("matbench_jdft2d.csv")
     draw_errorbar(mae_data)
     # # 不同dim平均mae
     # averages = {key: np.mean(values) for key, values in mae_data.items()}
