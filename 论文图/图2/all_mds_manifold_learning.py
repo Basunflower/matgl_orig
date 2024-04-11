@@ -7,6 +7,7 @@ from time import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import torch
 from matbench.bench import MatbenchBenchmark
 from matgl.ext.pymatgen import get_element_list
@@ -58,13 +59,6 @@ def get_main_group(elem_list):
     return main_groups
 
 
-def get_period(elem_list):
-    atomic_numbers = [Element(elem).Z for elem in elem_list]
-    # 周期数
-    periods = [Element.from_Z(atomic_number).row for atomic_number in atomic_numbers]
-    return periods
-
-
 def add_2d_scatter(ax, points, points_color, title=None):
     x, y = points.T
     ax.scatter(x, y, c=points_color, s=50, alpha=0.8)
@@ -89,36 +83,70 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
 
-    mb = MatbenchBenchmark(
-        autoload=False,
-        subset=[
-            "matbench_perovskites"  # 1w8
-        ]
+    # 数据集中所有的元素类型
+    elem_list = [Element.from_Z(z).symbol for z in range(1, 104)]
+
+    df = pd.read_csv('MDS_64dim.csv')
+    # 从 DataFrame 中选择相关行
+    selected_rows = df[df['Element'].isin(elem_list)]
+    embedding_weights = selected_rows['Coordinates'].tolist()
+    array_data = []
+    for line in embedding_weights:
+        line = line.replace('[', '').replace(']', '')  # 去掉列表标记
+        array_data.append([float(num) for num in line.strip().split(',')])
+
+    embedding_weights = np.array(array_data)
+
+    # 主族
+    main_group = get_main_group(elem_list)
+
+    S_points, S_color = embedding_weights, main_group
+
+    n_neighbors = 12  # neighborhood which is used to recover the locally linear structure
+    n_components = 2  # number of coordinates for the manifold
+
+    # plt.show()
+    # Isomap Embedding
+    isomap = manifold.Isomap(n_neighbors=n_neighbors, n_components=n_components, p=1)
+    S_isomap = isomap.fit_transform(S_points)
+    plot_2d(S_isomap, S_color, "Isomap Embedding")
+    plt.savefig('Isomap_Embedding.png', dpi=500, bbox_inches='tight', pad_inches=0)
+    plt.clf()
+    # Multidimensional scaling
+    md_scaling = manifold.MDS(
+        n_components=n_components,
+        max_iter=50,
+        n_init=4,
+        random_state=0,
+        normalized_stress=False,
     )
+    S_scaling = md_scaling.fit_transform(S_points)
 
-    for task in mb.tasks:
-        task.load()
-        for fold in task.folds:
-            train_inputs, train_outputs = task.get_train_and_val_data(fold)
-            structures, eform_per_atom = get_data(train_inputs, train_outputs)
-            # 数据集中所有的元素类型
-            elem_list = get_element_list(structures)
-            print("有意义元素：", elem_list)
+    plot_2d(S_scaling, S_color, "Multidimensional scaling")
+    plt.savefig('Multidimensional_scaling.png', dpi=500, bbox_inches='tight', pad_inches=0)
+    plt.clf()
 
-            # 主族
-            main_group = get_main_group(elem_list)
-            # 周期
-            periods = get_period(elem_list)
-            # 将元素在二维上表示
-            element_2d = np.array(list(zip(main_group, periods)))
+    # Spectral embedding for non-linear dimensionality reduction
+    spectral = manifold.SpectralEmbedding(
+        n_components=n_components, n_neighbors=n_neighbors, random_state=42
+    )
+    S_spectral = spectral.fit_transform(S_points)
 
-            S_points, S_color = element_2d, main_group
+    plot_2d(S_spectral, S_color, "Spectral Embedding")
+    plt.savefig('Spectral_embedding_for_non-linear_dimensionality_reduction.png', dpi=500, bbox_inches='tight', pad_inches=0)
+    plt.clf()
 
-            fig, ax = plt.subplots(
-                figsize=(7, 7), facecolor="white")# , constrained_layout=True
-            # )
+    # T-distributed Stochastic Neighbor Embedding
+    t_sne = manifold.TSNE(
+        n_components=n_components,
+        perplexity=30,
+        init="random",
+        n_iter=250,
+        random_state=0,
+    )
+    S_t_sne = t_sne.fit_transform(S_points)
 
-            add_2d_scatter(ax, S_points, S_color, 'Periodic Table')
-            plt.savefig('element_2d.png', dpi=500, bbox_inches='tight', pad_inches=0)
-            plt.clf()
-            sys.exit()
+    plot_2d(S_t_sne, S_color, "T-distributed Stochastic  \n Neighbor Embedding")
+    plt.savefig('T-distributed_Stochastic.png', dpi=500, bbox_inches='tight', pad_inches=0)
+    plt.clf()
+

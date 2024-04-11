@@ -7,6 +7,7 @@ from time import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import torch
 from matbench.bench import MatbenchBenchmark
 from matgl.ext.pymatgen import get_element_list
@@ -100,11 +101,17 @@ if __name__ == '__main__':
             # 数据集中所有的元素类型
             elem_list = get_element_list(structures)
             print("有意义元素：", elem_list)
-            # 读取模型嵌入层权重
-            checkpoint = torch.load('64_dim__MEGNet_nnEmbed__fold_' + str(fold + 1) + '.ckpt', map_location='cpu')
-            embedding_weights = checkpoint['state_dict']['model.embedding.layer_node_embedding.weight']
-            # 读取训练的元素的权重
-            embedding_weights = np.array(embedding_weights.tolist()[:len(elem_list)])
+            df = pd.read_csv('MDS_64dim.csv')
+            # 从 DataFrame 中选择相关行
+            selected_rows = df[df['Element'].isin(elem_list)]
+            embedding_weights = selected_rows['Coordinates'].tolist()
+            array_data = []
+            for line in embedding_weights:
+                line = line.replace('[', '').replace(']', '')  # 去掉列表标记
+                array_data.append([float(num) for num in line.strip().split(',')])
+
+            embedding_weights = np.array(array_data)
+
             # 主族
             main_group = get_main_group(elem_list)
 
@@ -112,40 +119,7 @@ if __name__ == '__main__':
 
             n_neighbors = 12  # neighborhood which is used to recover the locally linear structure
             n_components = 2  # number of coordinates for the manifold
-            params = {
-                "n_neighbors": n_neighbors,
-                "n_components": n_components,
-                "eigen_solver": "auto",
-                "random_state": 0,
-            }
 
-            lle_standard = manifold.LocallyLinearEmbedding(method="standard", **params)
-            S_standard = lle_standard.fit_transform(S_points)
-
-            lle_ltsa = manifold.LocallyLinearEmbedding(method="ltsa", **params)
-            S_ltsa = lle_ltsa.fit_transform(S_points)
-
-            lle_hessian = manifold.LocallyLinearEmbedding(method="hessian", **params)
-            S_hessian = lle_hessian.fit_transform(S_points)
-
-            lle_mod = manifold.LocallyLinearEmbedding(method="modified", **params)
-            S_mod = lle_mod.fit_transform(S_points)
-            fig, axs = plt.subplots(
-                nrows=2, ncols=2, figsize=(7, 7), facecolor="white", constrained_layout=True
-            )
-            fig.suptitle("Locally Linear Embeddings", size=16)
-
-            lle_methods = [
-                ("Standard locally linear embedding", S_standard),
-                ("Local tangent space alignment", S_ltsa),
-                ("Hessian eigenmap", S_hessian),
-                ("Modified locally linear embedding", S_mod),
-            ]
-            for ax, method in zip(axs.flat, lle_methods):
-                name, points = method
-                add_2d_scatter(ax, points, S_color, name)
-            # plt.savefig('Manifold_embedding.pdf', bbox_inches='tight', pad_inches=0)
-            plt.clf()
             # plt.show()
             # Isomap Embedding
             isomap = manifold.Isomap(n_neighbors=n_neighbors, n_components=n_components, p=1)

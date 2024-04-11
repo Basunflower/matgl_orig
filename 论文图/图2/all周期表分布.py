@@ -7,8 +7,8 @@ from time import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import torch
-from matbench.bench import MatbenchBenchmark
 from matgl.ext.pymatgen import get_element_list
 from pymatgen.core import Element
 from sklearn.decomposition import TruncatedSVD
@@ -89,36 +89,34 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
 
-    mb = MatbenchBenchmark(
-        autoload=False,
-        subset=[
-            "matbench_perovskites"  # 1w8
-        ]
-    )
+    # 数据集中所有的元素类型
+    elem_list = [Element.from_Z(z).symbol for z in range(1, 104)]
 
-    for task in mb.tasks:
-        task.load()
-        for fold in task.folds:
-            train_inputs, train_outputs = task.get_train_and_val_data(fold)
-            structures, eform_per_atom = get_data(train_inputs, train_outputs)
-            # 数据集中所有的元素类型
-            elem_list = get_element_list(structures)
-            print("有意义元素：", elem_list)
+    df = pd.read_csv('MDS_64dim.csv')
+    # 从 DataFrame 中选择相关行
+    selected_rows = df[df['Element'].isin(elem_list)]
+    embedding_weights = selected_rows['Coordinates'].tolist()
+    array_data = []
+    for line in embedding_weights:
+        line = line.replace('[', '').replace(']', '')  # 去掉列表标记
+        array_data.append([float(num) for num in line.strip().split(',')])
 
-            # 主族
-            main_group = get_main_group(elem_list)
-            # 周期
-            periods = get_period(elem_list)
-            # 将元素在二维上表示
-            element_2d = np.array(list(zip(main_group, periods)))
+    embedding_weights = np.array(array_data)
 
-            S_points, S_color = element_2d, main_group
+    # 主族
+    main_group = get_main_group(elem_list)
+    # 周期
+    periods = get_period(elem_list)
+    # 将元素在二维上表示
+    element_2d = np.array(list(zip(main_group, periods)))
 
-            fig, ax = plt.subplots(
-                figsize=(7, 7), facecolor="white")# , constrained_layout=True
-            # )
+    S_points, S_color = element_2d, main_group
 
-            add_2d_scatter(ax, S_points, S_color, 'Periodic Table')
-            plt.savefig('element_2d.png', dpi=500, bbox_inches='tight', pad_inches=0)
-            plt.clf()
-            sys.exit()
+    fig, ax = plt.subplots(
+        figsize=(7, 7), facecolor="white")# , constrained_layout=True
+    # )
+
+    add_2d_scatter(ax, S_points, S_color, 'Periodic Table')
+    plt.savefig('element_2d.png', dpi=500, bbox_inches='tight', pad_inches=0)
+    plt.clf()
+
