@@ -67,7 +67,7 @@ if __name__ == '__main__':
     mb = MatbenchBenchmark(
         autoload=False,
         subset=[
-            "matbench_mp_e_form_16",  # 回归 13w
+            "matbench_mp_e_form",  # 回归 13w
             # "matbench_perovskites"  # 1w8
             # "matbench_jdft2d"
         ]
