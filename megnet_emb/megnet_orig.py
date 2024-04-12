@@ -54,8 +54,8 @@ if __name__ == '__main__':
             os.remove(fn)
         except FileNotFoundError:
             pass
-    torch.cuda.init()
-    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+    # torch.cuda.init()
+    # os.environ['CUDA_VISIBLE_DEVICES'] = '1'
     init_seed = 42
     torch.manual_seed(init_seed)
     torch.cuda.manual_seed(init_seed)
@@ -67,21 +67,26 @@ if __name__ == '__main__':
     mb = MatbenchBenchmark(
         autoload=False,
         subset=[
-            "matbench_mp_e_form",  # 回归 13w
-            # "matbench_perovskites"  # 1w8
-            # "matbench_jdft2d"
+            # "matbench_mp_e_form",  # 回归 13w
+            "matbench_jdft2d",  # 636
+            "matbench_phonons",  # 1,265
+            "matbench_dielectric",  # 4,764
+            "matbench_log_gvrh",  # 10,987
+            "matbench_log_kvrh",  # 10,987
+            "matbench_perovskites"  # 1w8
         ]
     )
 
     if torch.cuda.is_available():
-        torch.cuda.set_device(1)
+        torch.cuda.set_device(0)
+        # torch.cuda.set_device(1)
 
     for task in mb.tasks:
         task.load()
         for fold in task.folds:
             train_inputs, train_outputs = task.get_train_and_val_data(fold)
 
-            structures, eform_per_atom = get_data(train_inputs, train_outputs)
+            structures, train_y = get_data(train_inputs, train_outputs)
 
             # 数据集中所有的元素类型
             elem_list = get_element_list(structures)
@@ -92,7 +97,7 @@ if __name__ == '__main__':
             # 把原数据集转化为megnet数据集
             mp_dataset = MEGNetDataset(
                 structures=structures,  # 结构
-                labels={"Eform": eform_per_atom},  # 标签
+                labels={"Eform": train_y},  # 标签
                 converter=converter,  # 图
                 initial=0.0,  # 高斯扩展的初始距离
                 final=5.0,  # 高斯扩展的最终距离
@@ -150,7 +155,7 @@ if __name__ == '__main__':
             #     filename=str(args.dim_node_embed) + '_dim__MEGNet_nnEmbed__fold_'+str(fold+1), save_top_k=1,
             #     mode='min')
             # Training
-            trainer = pl.Trainer(max_epochs=1000)# , default_root_dir=task.dataset_name+"_lightning_logs/")  # , callbacks=[checkpoint_callback])
+            trainer = pl.Trainer(max_epochs=1000, default_root_dir=task.dataset_name+"_"+str(args.dim_node_embed)+"_lightning_logs/")  # , callbacks=[checkpoint_callback])
             trainer.fit(model=lit_module, train_dataloaders=train_loader, val_dataloaders=val_loader)
 
             # 测试部分
