@@ -15,7 +15,7 @@ def get_mae_from_vsv(file_path="perovskites_32.csv"):
     return data
 
 
-def draw_errorbar(mae_data):
+def draw_errorbar(mae_data, benchemark):
     # 计算平均值和标准差
     means = [np.mean(values) for key, values in mae_data.items()]
     stds = [np.std(values) for key, values in mae_data.items()]
@@ -29,8 +29,7 @@ def draw_errorbar(mae_data):
         plt.text(i, means[i]+stds[i], f"{means[i]:.4f}", ha='center', va='bottom', fontweight='bold')  # 输出中心点的值
 
     # 榜一虚线
-    # plt.axhline(y=0.0269, color='gray', linestyle='--', label='Leaderboard Model MAE')
-    plt.axhline(y=33.1918, color='gray', linestyle='--', label='Leaderboard Model MAE')
+    plt.axhline(y=benchemark, color='gray', linestyle='--', label='Leaderboard Model MAE')
 
     plt.xticks(x, mae_data.keys())
     plt.xlim(-0.5, len(mae_data)-0.5)
@@ -44,7 +43,9 @@ def draw_errorbar(mae_data):
 
 def main():
     mae_data = get_mae_from_vsv("matbench_jdft2d.csv")
-    draw_errorbar(mae_data)
+    print(mae_data)
+
+    # draw_errorbar(mae_data, 0)
     # # 不同dim平均mae
     # averages = {key: np.mean(values) for key, values in mae_data.items()}
     # for key, value in averages.items():
