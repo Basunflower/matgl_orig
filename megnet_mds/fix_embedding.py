@@ -132,7 +132,7 @@ if __name__ == '__main__':
             # 拆分数据集为训练、验证、测试集
             train_data, val_data, _ = split_dataset(
                 mp_dataset,
-                frac_list=[0.8, 0.2, 0.0],  # 比例
+                frac_list=[1.0, 0.0, 0.0],  # 比例
                 shuffle=True,
                 random_state=42,
             )
@@ -183,7 +183,7 @@ if __name__ == '__main__':
             # Training
             trainer = pl.Trainer(max_epochs=1000, default_root_dir=task.dataset_name + "_" + str(args.dim_node_embed) + "_lightning_logs/",
                                  strategy='ddp_find_unused_parameters_true')  # , callbacks=[checkpoint_callback])
-            trainer.fit(model=lit_module, train_dataloaders=train_loader, val_dataloaders=val_loader)
+            trainer.fit(model=lit_module, train_dataloaders=train_loader)
 
             # 测试部分
             lit_module.eval()

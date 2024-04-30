@@ -37,6 +37,8 @@ warnings.simplefilter("ignore")
 # bash megnet_orig.sh
 parser = argparse.ArgumentParser(description='MEGNet')
 parser.add_argument('--dim_node_embed', type=int, default=64, help='number of node embedding dim')
+parser.add_argument('--fold', type=int, default=0, help='number of fold')
+
 args = parser.parse_args()
 
 
@@ -55,6 +57,8 @@ if __name__ == '__main__':
         except FileNotFoundError:
             pass
     # torch.cuda.init()
+    # 只能看到对应显卡
+    os.environ['CUDA_VISIBLE_DEVICES'] = '' + str(args.fold) + ''
     # os.environ['CUDA_VISIBLE_DEVICES'] = '1'
     init_seed = 42
     torch.manual_seed(init_seed)
@@ -67,7 +71,6 @@ if __name__ == '__main__':
     mb = MatbenchBenchmark(
         autoload=False,
         subset=[
-            # "matbench_mp_e_form",  # 回归 13w
             "matbench_jdft2d",  # 636
             "matbench_phonons",  # 1,265
             "matbench_dielectric",  # 4,764
@@ -84,6 +87,8 @@ if __name__ == '__main__':
     for task in mb.tasks:
         task.load()
         for fold in task.folds:
+            if fold != args.fold:
+                continue
             train_inputs, train_outputs = task.get_train_and_val_data(fold)
 
             structures, train_y = get_data(train_inputs, train_outputs)
@@ -108,7 +113,7 @@ if __name__ == '__main__':
             # 拆分数据集为训练、验证、测试集
             train_data, val_data, _ = split_dataset(
                 mp_dataset,
-                frac_list=[0.8, 0.2, 0.0],  # 比例
+                frac_list=[1.0, 0.0, 0.0],  # 比例
                 shuffle=True,
                 random_state=42,
             )
@@ -155,8 +160,8 @@ if __name__ == '__main__':
             #     filename=str(args.dim_node_embed) + '_dim__MEGNet_nnEmbed__fold_'+str(fold+1), save_top_k=1,
             #     mode='min')
             # Training
-            trainer = pl.Trainer(max_epochs=1000, default_root_dir=task.dataset_name+"_"+str(args.dim_node_embed)+"_lightning_logs/")  # , callbacks=[checkpoint_callback])
-            trainer.fit(model=lit_module, train_dataloaders=train_loader, val_dataloaders=val_loader)
+            trainer = pl.Trainer(max_epochs=1000, default_root_dir=task.dataset_name+"_"+str(fold)+"_"+str(args.dim_node_embed)+"/")  # , callbacks=[checkpoint_callback])
+            trainer.fit(model=lit_module, train_dataloaders=train_loader)
 
             # 测试部分
             lit_module.eval()

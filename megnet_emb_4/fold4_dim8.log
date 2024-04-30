@@ -1,0 +1,153 @@
+2024-04-27 21:12:56 INFO     Initialized benchmark 'matbench_v0.1' with 6 tasks: 
+['matbench_jdft2d',
+ 'matbench_phonons',
+ 'matbench_dielectric',
+ 'matbench_log_gvrh',
+ 'matbench_log_kvrh',
+ 'matbench_perovskites']
+2024-04-27 21:12:56 INFO     Loading dataset 'matbench_jdft2d'...
+2024-04-27 21:12:57 INFO     Dataset 'matbench_jdft2d loaded.
+  0%|          | 0/509 [00:00<?, ?it/s]  3%|▎         | 13/509 [00:00<00:03, 128.73it/s] 18%|█▊        | 90/509 [00:00<00:00, 503.71it/s] 34%|███▍      | 172/509 [00:00<00:00, 646.23it/s] 50%|████▉     | 254/509 [00:00<00:00, 712.14it/s] 65%|██████▍   | 330/509 [00:00<00:00, 727.91it/s] 79%|███████▉  | 403/509 [00:00<00:00, 479.68it/s] 91%|█████████ | 461/509 [00:01<00:00, 153.18it/s] 99%|█████████▊| 502/509 [00:03<00:00, 85.32it/s] 100%|██████████| 509/509 [00:03<00:00, 148.34it/s]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+You are using a CUDA device ('NVIDIA GeForce RTX 4090') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+Missing logger folder: matbench_jdft2d_4_8/lightning_logs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+
+  | Name  | Type              | Params
+--------------------------------------------
+0 | model | MEGNet            | 160 K 
+1 | mae   | MeanAbsoluteError | 0     
+2 | rmse  | MeanSquaredError  | 0     
+--------------------------------------------
+160 K     Trainable params
+25        Non-trainable params
+160 K     Total params
+0.642     Total estimated model params size (MB)
+`Trainer.fit` stopped: `max_epochs=1000` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       Test metric             DataLoader 0
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+        test_MAE            37.681549072265625
+        test_RMSE            88.80686950683594
+     test_Total_Loss        37.681549072265625
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+2024-04-27 21:36:59 INFO     Loading dataset 'matbench_phonons'...
+2024-04-27 21:36:59 INFO     Dataset 'matbench_phonons loaded.
+  0%|          | 0/1012 [00:00<?, ?it/s]  8%|▊         | 76/1012 [00:00<00:01, 749.39it/s] 15%|█▍        | 151/1012 [00:00<00:01, 748.18it/s] 23%|██▎       | 232/1012 [00:00<00:01, 774.26it/s] 31%|███       | 311/1012 [00:00<00:00, 780.43it/s] 39%|███▊      | 390/1012 [00:00<00:00, 743.95it/s] 46%|████▌     | 468/1012 [00:00<00:00, 753.69it/s] 54%|█████▍    | 544/1012 [00:00<00:00, 742.87it/s] 61%|██████▏   | 620/1012 [00:00<00:00, 747.20it/s] 69%|██████▉   | 697/1012 [00:00<00:00, 751.76it/s] 76%|███████▋  | 773/1012 [00:01<00:00, 754.10it/s] 84%|████████▍ | 850/1012 [00:01<00:00, 758.11it/s] 92%|█████████▏| 928/1012 [00:01<00:00, 746.17it/s] 99%|█████████▉| 1003/1012 [00:01<00:00, 679.99it/s]100%|██████████| 1012/1012 [00:01<00:00, 733.54it/s]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Missing logger folder: matbench_phonons_4_8/lightning_logs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+
+  | Name  | Type              | Params
+--------------------------------------------
+0 | model | MEGNet            | 160 K 
+1 | mae   | MeanAbsoluteError | 0     
+2 | rmse  | MeanSquaredError  | 0     
+--------------------------------------------
+160 K     Trainable params
+25        Non-trainable params
+160 K     Total params
+0.642     Total estimated model params size (MB)
+`Trainer.fit` stopped: `max_epochs=1000` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       Test metric             DataLoader 0
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+        test_MAE            25.196062088012695
+        test_RMSE            41.38652038574219
+     test_Total_Loss        25.196062088012695
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+2024-04-27 22:24:19 INFO     Loading dataset 'matbench_dielectric'...
+2024-04-27 22:24:23 INFO     Dataset 'matbench_dielectric loaded.
+  0%|          | 0/3812 [00:00<?, ?it/s]  2%|▏         | 71/3812 [00:00<00:05, 708.66it/s]  4%|▍         | 149/3812 [00:00<00:04, 747.17it/s]  6%|▌         | 224/3812 [00:00<00:05, 706.57it/s]  8%|▊         | 295/3812 [00:00<00:05, 681.96it/s] 10%|▉         | 364/3812 [00:00<00:05, 677.16it/s] 11%|█▏        | 435/3812 [00:00<00:04, 684.57it/s] 13%|█▎        | 508/3812 [00:00<00:04, 698.76it/s] 15%|█▌        | 578/3812 [00:00<00:05, 617.01it/s] 17%|█▋        | 642/3812 [00:00<00:05, 605.56it/s] 18%|█▊        | 704/3812 [00:01<00:05, 570.20it/s] 20%|██        | 770/3812 [00:01<00:05, 594.20it/s] 22%|██▏       | 844/3812 [00:01<00:04, 633.29it/s] 24%|██▍       | 909/3812 [00:01<00:04, 637.50it/s] 26%|██▌       | 980/3812 [00:01<00:04, 656.64it/s] 27%|██▋       | 1047/3812 [00:01<00:04, 654.37it/s] 29%|██▉       | 1113/3812 [00:01<00:04, 643.07it/s] 31%|███       | 1178/3812 [00:01<00:04, 630.13it/s] 33%|███▎      | 1242/3812 [00:01<00:04, 625.05it/s] 34%|███▍      | 1306/3812 [00:02<00:03, 627.93it/s] 36%|███▌      | 1375/3812 [00:02<00:03, 645.35it/s] 38%|███▊      | 1440/3812 [00:02<00:03, 612.38it/s] 39%|███▉      | 1503/3812 [00:02<00:03, 617.30it/s] 41%|████▏     | 1573/3812 [00:02<00:03, 639.22it/s] 43%|████▎     | 1638/3812 [00:02<00:03, 635.20it/s] 45%|████▍     | 1702/3812 [00:02<00:03, 546.15it/s] 46%|████▋     | 1766/3812 [00:02<00:03, 569.72it/s] 48%|████▊     | 1833/3812 [00:02<00:03, 596.87it/s] 50%|████▉     | 1895/3812 [00:03<00:03, 585.87it/s] 51%|█████▏    | 1956/3812 [00:03<00:03, 590.72it/s] 53%|█████▎    | 2016/3812 [00:03<00:03, 576.98it/s] 54%|█████▍    | 2076/3812 [00:03<00:02, 583.23it/s] 56%|█████▌    | 2138/3812 [00:03<00:02, 592.77it/s] 58%|█████▊    | 2198/3812 [00:03<00:02, 583.46it/s] 59%|█████▉    | 2257/3812 [00:03<00:02, 566.58it/s] 61%|██████    | 2314/3812 [00:03<00:02, 543.63it/s] 62%|██████▏   | 2369/3812 [00:03<00:02, 533.65it/s] 64%|██████▍   | 2437/3812 [00:03<00:02, 572.01it/s] 66%|██████▌   | 2508/3812 [00:04<00:02, 609.09it/s] 68%|██████▊   | 2579/3812 [00:04<00:01, 634.46it/s] 69%|██████▉   | 2643/3812 [00:04<00:01, 597.02it/s] 71%|███████   | 2715/3812 [00:04<00:01, 630.11it/s] 73%|███████▎  | 2779/3812 [00:04<00:01, 608.81it/s] 75%|███████▍  | 2843/3812 [00:04<00:01, 617.31it/s] 76%|███████▋  | 2916/3812 [00:04<00:01, 647.74it/s] 78%|███████▊  | 2982/3812 [00:04<00:01, 648.43it/s] 80%|███████▉  | 3048/3812 [00:04<00:01, 622.85it/s] 82%|████████▏ | 3111/3812 [00:05<00:01, 608.82it/s] 84%|████████▎ | 3184/3812 [00:05<00:00, 639.66it/s] 86%|████████▌ | 3260/3812 [00:05<00:00, 673.62it/s] 87%|████████▋ | 3333/3812 [00:05<00:00, 689.26it/s] 89%|████████▉ | 3403/3812 [00:05<00:00, 631.89it/s] 91%|█████████ | 3468/3812 [00:05<00:00, 604.91it/s] 93%|█████████▎| 3530/3812 [00:05<00:00, 593.94it/s] 94%|█████████▍| 3590/3812 [00:05<00:00, 572.68it/s] 96%|█████████▌| 3658/3812 [00:05<00:00, 601.90it/s] 98%|█████████▊| 3729/3812 [00:06<00:00, 629.29it/s]100%|█████████▉| 3793/3812 [00:06<00:00, 625.29it/s]100%|██████████| 3812/3812 [00:06<00:00, 561.80it/s]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Missing logger folder: matbench_dielectric_4_8/lightning_logs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+
+  | Name  | Type              | Params
+--------------------------------------------
+0 | model | MEGNet            | 160 K 
+1 | mae   | MeanAbsoluteError | 0     
+2 | rmse  | MeanSquaredError  | 0     
+--------------------------------------------
+160 K     Trainable params
+25        Non-trainable params
+160 K     Total params
+0.642     Total estimated model params size (MB)
+`Trainer.fit` stopped: `max_epochs=1000` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       Test metric             DataLoader 0
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+        test_MAE            0.09770018607378006
+        test_RMSE           0.30243778228759766
+     test_Total_Loss        0.09770018607378006
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+2024-04-28 01:17:45 INFO     Loading dataset 'matbench_log_gvrh'...
+2024-04-28 01:17:49 INFO     Dataset 'matbench_log_gvrh loaded.
+  0%|          | 0/8790 [00:00<?, ?it/s]  1%|          | 44/8790 [00:00<00:20, 435.06it/s]  1%|          | 90/8790 [00:00<00:19, 448.17it/s]  2%|▏         | 146/8790 [00:00<00:17, 495.57it/s]  2%|▏         | 203/8790 [00:00<00:16, 521.76it/s]  3%|▎         | 263/8790 [00:00<00:15, 549.45it/s]  4%|▎         | 321/8790 [00:00<00:15, 556.21it/s]  4%|▍         | 377/8790 [00:00<00:15, 540.09it/s]  5%|▍         | 432/8790 [00:00<00:15, 542.54it/s]  6%|▌         | 487/8790 [00:00<00:15, 531.43it/s]  6%|▌         | 545/8790 [00:01<00:15, 543.66it/s]  7%|▋         | 617/8790 [00:01<00:13, 593.25it/s]  8%|▊         | 697/8790 [00:01<00:12, 653.81it/s]  9%|▉         | 775/8790 [00:01<00:11, 690.07it/s] 10%|▉         | 856/8790 [00:01<00:10, 724.14it/s] 11%|█         | 929/8790 [00:01<00:11, 711.40it/s] 11%|█▏        | 1001/8790 [00:01<00:11, 705.27it/s] 12%|█▏        | 1075/8790 [00:01<00:10, 715.40it/s] 13%|█▎        | 1148/8790 [00:01<00:10, 715.54it/s] 14%|█▍        | 1220/8790 [00:01<00:10, 713.28it/s] 15%|█▍        | 1292/8790 [00:02<00:33, 226.60it/s] 16%|█▌        | 1370/8790 [00:02<00:25, 291.56it/s] 16%|█▋        | 1444/8790 [00:02<00:20, 355.71it/s] 17%|█▋        | 1508/8790 [00:03<00:18, 396.97it/s] 18%|█▊        | 1580/8790 [00:03<00:15, 458.17it/s] 19%|█▉        | 1653/8790 [00:03<00:13, 515.53it/s] 20%|█▉        | 1720/8790 [00:03<00:13, 518.52it/s] 20%|██        | 1783/8790 [00:03<00:13, 519.36it/s] 21%|██        | 1843/8790 [00:03<00:13, 506.59it/s] 22%|██▏       | 1899/8790 [00:03<00:13, 502.99it/s] 22%|██▏       | 1953/8790 [00:03<00:13, 508.31it/s] 23%|██▎       | 2007/8790 [00:03<00:13, 508.66it/s] 23%|██▎       | 2060/8790 [00:04<00:13, 499.73it/s] 24%|██▍       | 2112/8790 [00:04<00:13, 492.72it/s] 25%|██▍       | 2163/8790 [00:04<00:13, 478.23it/s] 25%|██▌       | 2215/8790 [00:04<00:13, 488.48it/s] 26%|██▌       | 2265/8790 [00:04<00:13, 485.87it/s] 26%|██▋       | 2317/8790 [00:04<00:13, 493.39it/s] 27%|██▋       | 2371/8790 [00:04<00:12, 504.68it/s] 28%|██▊       | 2422/8790 [00:04<00:12, 496.50it/s] 28%|██▊       | 2476/8790 [00:04<00:12, 506.02it/s] 29%|██▊       | 2527/8790 [00:05<00:12, 501.29it/s] 29%|██▉       | 2579/8790 [00:05<00:12, 505.66it/s] 30%|██▉       | 2634/8790 [00:05<00:11, 518.61it/s] 31%|███       | 2692/8790 [00:05<00:11, 535.72it/s] 31%|███▏      | 2747/8790 [00:05<00:11, 537.59it/s] 32%|███▏      | 2802/8790 [00:05<00:11, 538.80it/s] 33%|███▎      | 2859/8790 [00:05<00:10, 544.98it/s] 33%|███▎      | 2914/8790 [00:05<00:10, 539.51it/s] 34%|███▍      | 2968/8790 [00:05<00:11, 521.38it/s] 34%|███▍      | 3021/8790 [00:05<00:11, 513.40it/s] 35%|███▌      | 3078/8790 [00:06<00:10, 527.63it/s] 36%|███▌      | 3131/8790 [00:06<00:10, 523.28it/s] 36%|███▌      | 3184/8790 [00:06<00:10, 519.01it/s] 37%|███▋      | 3236/8790 [00:06<00:10, 508.94it/s] 37%|███▋      | 3290/8790 [00:06<00:10, 516.41it/s] 38%|███▊      | 3343/8790 [00:06<00:10, 518.15it/s] 39%|███▊      | 3395/8790 [00:06<00:10, 512.22it/s] 39%|███▉      | 3450/8790 [00:06<00:10, 520.99it/s] 40%|███▉      | 3503/8790 [00:06<00:10, 509.86it/s] 41%|████      | 3571/8790 [00:07<00:09, 559.10it/s] 41%|████▏     | 3641/8790 [00:07<00:08, 598.95it/s] 42%|████▏     | 3711/8790 [00:07<00:08, 627.07it/s] 43%|████▎     | 3787/8790 [00:07<00:07, 663.80it/s] 44%|████▍     | 3860/8790 [00:07<00:07, 683.07it/s] 45%|████▍     | 3929/8790 [00:07<00:07, 677.08it/s] 46%|████▌     | 4004/8790 [00:07<00:06, 696.38it/s] 46%|████▋     | 4075/8790 [00:07<00:06, 699.24it/s] 47%|████▋     | 4145/8790 [00:07<00:06, 696.78it/s] 48%|████▊     | 4221/8790 [00:07<00:06, 715.38it/s] 49%|████▉     | 4293/8790 [00:08<00:06, 704.21it/s] 50%|████▉     | 4364/8790 [00:08<00:06, 654.74it/s] 50%|█████     | 4431/8790 [00:08<00:07, 616.67it/s] 51%|█████▏    | 4505/8790 [00:08<00:06, 649.05it/s] 52%|█████▏    | 4581/8790 [00:08<00:06, 680.12it/s] 53%|█████▎    | 4652/8790 [00:08<00:06, 686.55it/s] 54%|█████▎    | 4724/8790 [00:08<00:05, 694.99it/s] 55%|█████▍    | 4794/8790 [00:08<00:05, 689.10it/s] 55%|█████▌    | 4864/8790 [00:08<00:05, 668.03it/s] 56%|█████▌    | 4932/8790 [00:09<00:06, 636.61it/s] 57%|█████▋    | 4997/8790 [00:09<00:06, 629.58it/s] 58%|█████▊    | 5061/8790 [00:09<00:06, 617.25it/s] 58%|█████▊    | 5123/8790 [00:09<00:06, 605.07it/s] 59%|█████▉    | 5184/8790 [00:09<00:06, 574.95it/s] 60%|█████▉    | 5244/8790 [00:09<00:06, 580.66it/s] 60%|██████    | 5315/8790 [00:09<00:05, 615.89it/s] 61%|██████    | 5377/8790 [00:09<00:05, 614.30it/s] 62%|██████▏   | 5439/8790 [00:09<00:05, 592.71it/s] 63%|██████▎   | 5499/8790 [00:09<00:05, 571.63it/s] 63%|██████▎   | 5557/8790 [00:10<00:05, 572.32it/s] 64%|██████▍   | 5623/8790 [00:10<00:05, 596.25it/s] 65%|██████▍   | 5683/8790 [00:10<00:05, 592.42it/s] 65%|██████▌   | 5749/8790 [00:10<00:04, 609.89it/s] 66%|██████▌   | 5820/8790 [00:10<00:04, 637.07it/s] 67%|██████▋   | 5884/8790 [00:10<00:04, 612.68it/s] 68%|██████▊   | 5946/8790 [00:10<00:04, 609.11it/s] 68%|██████▊   | 6008/8790 [00:10<00:04, 610.30it/s] 69%|██████▉   | 6075/8790 [00:10<00:04, 625.12it/s] 70%|██████▉   | 6138/8790 [00:11<00:04, 615.17it/s] 71%|███████   | 6200/8790 [00:11<00:04, 593.25it/s] 71%|███████   | 6260/8790 [00:11<00:04, 580.82it/s] 72%|███████▏  | 6323/8790 [00:11<00:04, 594.47it/s] 73%|███████▎  | 6386/8790 [00:11<00:03, 603.93it/s] 73%|███████▎  | 6450/8790 [00:11<00:03, 614.37it/s] 74%|███████▍  | 6512/8790 [00:11<00:03, 589.62it/s] 75%|███████▍  | 6572/8790 [00:11<00:03, 592.38it/s] 75%|███████▌  | 6636/8790 [00:11<00:03, 604.55it/s] 76%|███████▌  | 6699/8790 [00:11<00:03, 610.57it/s] 77%|███████▋  | 6763/8790 [00:12<00:03, 618.67it/s] 78%|███████▊  | 6829/8790 [00:12<00:03, 628.44it/s] 78%|███████▊  | 6892/8790 [00:12<00:03, 627.49it/s] 79%|███████▉  | 6956/8790 [00:12<00:02, 629.09it/s] 80%|███████▉  | 7019/8790 [00:12<00:02, 618.82it/s] 81%|████████  | 7081/8790 [00:12<00:02, 613.21it/s] 81%|████████▏ | 7143/8790 [00:12<00:02, 589.72it/s] 82%|████████▏ | 7203/8790 [00:12<00:02, 579.18it/s] 83%|████████▎ | 7272/8790 [00:12<00:02, 610.46it/s] 84%|████████▎ | 7341/8790 [00:12<00:02, 631.12it/s] 84%|████████▍ | 7413/8790 [00:13<00:02, 655.92it/s] 85%|████████▌ | 7480/8790 [00:13<00:01, 658.94it/s] 86%|████████▌ | 7553/8790 [00:13<00:01, 678.69it/s] 87%|████████▋ | 7624/8790 [00:13<00:01, 687.59it/s] 88%|████████▊ | 7696/8790 [00:13<00:01, 696.36it/s] 88%|████████▊ | 7770/8790 [00:13<00:01, 707.53it/s] 89%|████████▉ | 7844/8790 [00:13<00:01, 714.27it/s] 90%|█████████ | 7918/8790 [00:13<00:01, 721.07it/s] 91%|█████████ | 7991/8790 [00:13<00:01, 722.25it/s] 92%|█████████▏| 8066/8790 [00:13<00:00, 727.76it/s] 93%|█████████▎| 8140/8790 [00:14<00:00, 728.87it/s] 93%|█████████▎| 8213/8790 [00:14<00:00, 723.89it/s] 94%|█████████▍| 8286/8790 [00:14<00:00, 723.50it/s] 95%|█████████▌| 8360/8790 [00:14<00:00, 727.49it/s] 96%|█████████▌| 8435/8790 [00:14<00:00, 733.50it/s] 97%|█████████▋| 8510/8790 [00:14<00:00, 736.38it/s] 98%|█████████▊| 8588/8790 [00:14<00:00, 749.27it/s] 99%|█████████▊| 8665/8790 [00:14<00:00, 753.22it/s] 99%|█████████▉| 8742/8790 [00:14<00:00, 757.36it/s]100%|██████████| 8790/8790 [00:14<00:00, 587.08it/s]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+Missing logger folder: matbench_log_gvrh_4_8/lightning_logs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [4]
+
+  | Name  | Type              | Params
+--------------------------------------------
+0 | model | MEGNet            | 160 K 
+1 | mae   | MeanAbsoluteError | 0     
+2 | rmse  | MeanSquaredError  | 0     
+--------------------------------------------
+160 K     Trainable params
+25        Non-trainable params
+160 K     Total params
+0.642     Total estimated model params size (MB)
+Traceback (most recent call last):
+  File "/home/liuxiaotong/chtt/megnet_emb_4/megnet_orig.py", line 164, in <module>
+    trainer.fit(model=lit_module, train_dataloaders=train_loader)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 544, in fit
+    call._call_and_handle_interrupt(
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/call.py", line 44, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 580, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 987, in _run
+    results = self._run_stage()
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 1033, in _run_stage
+    self.fit_loop.run()
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/loops/fit_loop.py", line 206, in run
+    self.on_advance_end()
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/loops/fit_loop.py", line 378, in on_advance_end
+    call._call_callback_hooks(trainer, "on_train_epoch_end", monitoring_callbacks=True)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/call.py", line 208, in _call_callback_hooks
+    fn(trainer, trainer.lightning_module, *args, **kwargs)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/callbacks/model_checkpoint.py", line 324, in on_train_epoch_end
+    self._save_topk_checkpoint(trainer, monitor_candidates)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/callbacks/model_checkpoint.py", line 386, in _save_topk_checkpoint
+    self._save_none_monitor_checkpoint(trainer, monitor_candidates)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/callbacks/model_checkpoint.py", line 714, in _save_none_monitor_checkpoint
+    self._save_checkpoint(trainer, filepath)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/callbacks/model_checkpoint.py", line 389, in _save_checkpoint
+    trainer.save_checkpoint(filepath, self.save_weights_only)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/trainer/trainer.py", line 1381, in save_checkpoint
+    self.strategy.save_checkpoint(checkpoint, filepath, storage_options=storage_options)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/strategies/strategy.py", line 491, in save_checkpoint
+    self.checkpoint_io.save_checkpoint(checkpoint, filepath, storage_options=storage_options)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/lightning_fabric/plugins/io/torch_io.py", line 58, in save_checkpoint
+    _atomic_save(checkpoint, path)
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/lightning_fabric/utilities/cloud_io.py", line 80, in _atomic_save
+    f.write(bytesbuffer.getvalue())
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/fsspec/implementations/local.py", line 389, in write
+    return self.f.write(*args, **kwargs)
+OSError: [Errno 28] No space left on device
