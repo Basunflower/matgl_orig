@@ -10,8 +10,13 @@ subset=(
 )
 
 fold=$1
-dim_node_embed_values=("${@:2}")
+dim=$2
 task_num=$3
+cuda_device=$4
+#fold=0
+#dim=4
+#task_num=6
+#cuda_device=1
 # 计算起始索引
 start_index=$(( ${#subset[@]} - task_num ))
 
@@ -20,12 +25,8 @@ selected_subset=("${subset[@]:start_index}")
 # 将选择的子集列表转换为逗号分隔的字符串
 selected_subset_str=$(IFS=, ; echo "${selected_subset[*]}")
 
-for dim in "${dim_node_embed_values[@]}"
-do
-      echo "MDS Running with dim_node_embed = $dim fold = $fold task = $selected_subset_str"
+echo "MDS Running with dim_node_embed = $dim fold = $fold task = $selected_subset_str cuda_device = $cuda_device"
+nohup python fix_embedding.py --dim_node_embed "$dim" --fold "$fold" --subsets "${selected_subset[@]}" --cuda_devices "$cuda_device" > "fold${fold}_dim${dim}_mds_redress.log" 2>&1
+# python fix_embedding.py --dim_node_embed $dim --fold $fold --subsets "${selected_subset[@]}" --cuda_devices $cuda_device
 
-      nohup python fix_embedding.py --dim_node_embed $dim --fold $fold --subsets "${selected_subset[@]}" > "fold${fold}_dim${dim}_mds_redress.log" 2>&1
-
-      echo
-done
 

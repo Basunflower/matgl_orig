@@ -103,3 +103,4 @@ Stack trace:
   [bt] (8) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/_ffi/_cy3/core.cpython-310-x86_64-linux-gnu.so(+0x1c14f) [0x7f2a1ddd614f]
 
 
+megnet_mds_0/fold0_dim4_mds.log 还缺 4 个task.

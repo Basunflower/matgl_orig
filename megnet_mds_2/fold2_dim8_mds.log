@@ -187,4 +187,4 @@ Stack trace:
   [bt] (5) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/libdgl.so(+0x9062b4) [0x7f57c05a82b4]
   [bt] (6) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/libdgl.so(DGLFuncCall+0x4c) [0x7f57c04c6b9c]
   [bt] (7) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/_ffi/_cy3/core.cpython-310-x86_64-linux-gnu.so(+0x1bde4) [0x7f57bf60cde4]
-  [bt] (8) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packa
+  [bt] (8) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packamegnet_mds_2/fold2_dim8_mds.log 还缺 1 个task.

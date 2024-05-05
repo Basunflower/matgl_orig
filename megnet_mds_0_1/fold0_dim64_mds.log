@@ -142,4 +142,4 @@ Traceback (most recent call last):
     self._save_none_monitor_checkpoint(trainer, monitor_candidates)
   File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/pytorch_lightning/callbacks/model_checkpoint.py", line 714, in _save_none_monitor_checkpoint
     self._save_checkpoint(trainer, filepath)
-  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-pac
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-pacmegnet_mds_0_1/fold0_dim64_mds.log 还缺 3 个task.

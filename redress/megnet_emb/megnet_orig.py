@@ -34,6 +34,8 @@ parser = argparse.ArgumentParser(description='MEGNet')
 parser.add_argument('--dim_node_embed', type=int, default=64, help='number of node embedding dim')
 parser.add_argument('--fold', type=int, default=0, help='number of fold')
 parser.add_argument('--subsets', nargs='+', choices=subset_options, help='Subset(s) to process.')
+parser.add_argument('--cuda_devices', type=str, default='0', choices=['0', '1', '2', '3', '4'],
+                        help='CUDA devices to be visible, choose from 0 to 4. Default is 0.')
 args = parser.parse_args()
 
 
@@ -52,7 +54,7 @@ if __name__ == '__main__':
         except FileNotFoundError:
             pass
     # 只能看到对应显卡
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2'
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.cuda_devices
     init_seed = 42
     torch.manual_seed(init_seed)
     torch.cuda.manual_seed(init_seed)
@@ -108,31 +110,10 @@ if __name__ == '__main__':
                 val_data=val_data,
                 collate_fn=collate_fn,
                 batch_size=32,
-                num_workers=1,
                 pin_memory=torch.cuda.is_available(),
                 generator=torch.Generator().manual_seed(42)
             )
 
-            test_inputs, test_outputs = task.get_test_data(fold, include_target=True)
-            test_sturcture, test_Eform = get_data(test_inputs, test_outputs)
-            # 把原数据集转化为megnet数据集
-            test_dataset = MEGNetDataset(
-                structures=test_sturcture,  # 结构
-                labels={"Eform": test_Eform},  # 标签
-                converter=converter,  # 图
-                initial=0.0,  # 高斯扩展的初始距离
-                final=5.0,  # 高斯扩展的最终距离
-                num_centers=100,  # 高斯函数的数量
-                width=0.5,  # 高斯函数的宽度
-            )
-
-            kwargs = {
-                "batch_size": 32,
-                "num_workers": 1,
-                "pin_memory": torch.cuda.is_available()
-            }
-
-            test_loader = GraphDataLoader(test_dataset, collate_fn=collate_fn, **kwargs)
             # define the bond expansion
             bond_expansion = BondExpansion(rbf_type="Gaussian", initial=0.0, final=5.0, num_centers=25, width=0.4)
             # a Set2Set encoder for node and edge embeddings, feed-forward blocks of units [64, 32], softplus activation and gauss distance expansion with cutoff of 5A and 25 bins with 0.4 sigma. We used a larger input embedding vector [64] of atom species and added the charge as input graph attributes. We trained with MAE loss and a linear learning rate scheduler from 5e-4 to 5e-6 over 1000 epochs using Adam. We added a standard scaler for regression.
@@ -158,15 +139,35 @@ if __name__ == '__main__':
 
             # setup the MEGNetTrainer
             lit_module = ModelLightningModule(model=model, loss="mae_loss")
+
+            # Training
+            trainer = pl.Trainer(max_epochs=1000, default_root_dir=task.dataset_name+"_"+str(fold)+"_"+str(args.dim_node_embed)+"/")  # , enable_progress_bar=False)  # , callbacks=[checkpoint_callback])
+            trainer.fit(model=lit_module, train_dataloaders=train_loader)
+
+            # 测试部分
+            lit_module.eval()
+            test_inputs, test_outputs = task.get_test_data(fold, include_target=True)
+            test_sturcture, test_Eform = get_data(test_inputs, test_outputs)
+            # 把原数据集转化为megnet数据集
+            test_dataset = MEGNetDataset(
+                structures=test_sturcture,  # 结构
+                labels={"Eform": test_Eform},  # 标签
+                converter=converter,  # 图
+                initial=0.0,  # 高斯扩展的初始距离
+                final=5.0,  # 高斯扩展的最终距离
+                num_centers=100,  # 高斯函数的数量
+                width=0.5,  # 高斯函数的宽度
+            )
+
+            kwargs = {
+                "batch_size": 32,
+                "pin_memory": torch.cuda.is_available()
+            }
+
+            test_loader = GraphDataLoader(test_dataset, collate_fn=collate_fn, **kwargs)
+            predict = trainer.test(model=lit_module, dataloaders=test_loader)
             for fn in ("dgl_graph.bin", "lattice.pt", "dgl_line_graph.bin", "state_attr.pt", "labels.json"):
                 try:
                     os.remove(fn)
                 except FileNotFoundError:
                     pass
-            # Training
-            trainer = pl.Trainer(max_epochs=1000, default_root_dir=task.dataset_name+"_"+str(fold)+"_"+str(args.dim_node_embed)+"/", enable_progress_bar=False)  # , callbacks=[checkpoint_callback])
-            trainer.fit(model=lit_module, train_dataloaders=train_loader)
-
-            # 测试部分
-            lit_module.eval()
-            predict = trainer.test(model=lit_module, dataloaders=test_loader)

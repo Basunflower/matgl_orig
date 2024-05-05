@@ -122,3 +122,4 @@ Traceback (most recent call last):
   File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/fsspec/implementations/local.py", line 389, in write
     return self.f.write(*args, **kwargs)
 OSError: [Errno 28] No space left on device
+megnet_emb_2_1/fold2_dim128.log 还缺 4 个task.

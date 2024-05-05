@@ -167,4 +167,4 @@ Traceback (most recent call last):
     super().__init__(name=name)
   File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/data/dgl_dataset.py", line 112, in __init__
     self._load()
-  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/data/dgl_dataset.py
+  File "/home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/data/dgl_dataset.pymegnet_mds_0_1/fold0_dim32_mds.log 还缺 1 个task.

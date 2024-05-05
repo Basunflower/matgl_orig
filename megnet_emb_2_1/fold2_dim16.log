@@ -184,3 +184,4 @@ Stack trace:
   [bt] (8) /home/liuxiaotong/anaconda3/envs/pl_124/lib/python3.10/site-packages/dgl/_ffi/_cy3/core.cpython-310-x86_64-linux-gnu.so(+0x1c14f) [0x7f9d46d1b14f]
 
 
+megnet_emb_2_1/fold2_dim16.log 还缺 1 个task.
